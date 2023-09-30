@@ -30,11 +30,14 @@ public class UserRepository implements GBRepository {
 
     @Override
     public User create(User user) {
+        if (user.getFirstName().isEmpty() || user.getLastName().isEmpty() || user.getPhone().isEmpty()) {
+            throw new RuntimeException("Поля ИМЯ, ФАМИИЛИЯ или ТЕЛЕФОН не могут быть пустыми");
+        }
         List<User> users = findAll();
         long max = 0L;
         for (User u : users) {
             long id = u.getId();
-            if (max < id){
+            if (max < id) {
                 max = id;
             }
         }
@@ -56,22 +59,40 @@ public class UserRepository implements GBRepository {
         User editUser = users.stream()
                 .filter(u -> u.getId()
                         .equals(userId))
-                .findFirst().orElseThrow(() -> new RuntimeException("User not found"));
-        editUser.setFirstName(update.getFirstName());
-        editUser.setLastName(update.getLastName());
-        editUser.setPhone(update.getPhone());
+                .findFirst().orElseThrow(() -> new RuntimeException("Такого пользователя нет"));
+        if (!update.getFirstName().isEmpty()) {
+            editUser.setFirstName(update.getFirstName());
+        }
+        if (!update.getLastName().isEmpty()) {
+            editUser.setLastName(update.getLastName());
+        }
+        if (!update.getPhone().isEmpty()) {
+            editUser.setPhone(update.getPhone());
+        }
         write(users);
         return Optional.of(update);
     }
 
     @Override
     public boolean delete(Long id) {
-        return false;
+
+        List<User> users = findAll();
+        List<User> newUsers = new ArrayList<>();
+
+        for (User user : users) {
+            if (!user.getId().equals(id)) {
+                newUsers.add(user);
+            }
+        }
+        write(newUsers);
+        return true;
+
+
     }
 
     private void write(List<User> users) {
         List<String> lines = new ArrayList<>();
-        for (User u: users) {
+        for (User u : users) {
             lines.add(mapper.toInput(u));
         }
         operation.saveAll(lines);

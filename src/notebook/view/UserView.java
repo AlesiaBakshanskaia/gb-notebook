@@ -13,7 +13,7 @@ public class UserView {
         this.userController = userController;
     }
 
-    public void run(){
+    public void run() {
         Commands com;
 
         while (true) {
@@ -27,6 +27,9 @@ public class UserView {
                     break;
                 case READ:
                     String id = prompt("Идентификатор пользователя: ");
+                    if (id.isEmpty()) {
+                        throw new RuntimeException("Идентификатор не может быть пустым");
+                    }
                     try {
                         User user = userController.readUser(Long.parseLong(id));
                         System.out.println(user);
@@ -35,9 +38,19 @@ public class UserView {
                         throw new RuntimeException(e);
                     }
                     break;
+                case DELETE:
+                    String idd = prompt("Идентификатор пользователя: ");
+                    userController.deliteUser(idd);
+                    break;
                 case UPDATE:
-                    String userId = prompt("Enter user id: ");
+                    String userId = prompt("Идентификатор пользователя: ");
+                    if (userId.isEmpty()) {
+                        throw new RuntimeException("Идентификатор не может быть пустым");
+                    }
                     userController.updateUser(userId, createUser());
+                    break;
+                case LIST:
+                    System.out.println(userController.getAllUsers());
             }
         }
     }
@@ -50,8 +63,17 @@ public class UserView {
 
     private User createUser() {
         String firstName = prompt("Имя: ");
+//        if (firstName.isEmpty()) {
+//            throw new RuntimeException("Поле ИМЯ не может быть пустым");
+//        }
         String lastName = prompt("Фамилия: ");
+//        if (lastName.isEmpty()) {
+//            throw new RuntimeException("Поле ФАМИЛИЯ не может быть пустым");
+//        }
         String phone = prompt("Номер телефона: ");
-        return new User(firstName, lastName, phone);
+//        if (phone.isEmpty()) {
+//            throw new RuntimeException("Поле ТЕЛЕФОН не может быть пустым");
+//        }
+        return new User(firstName.replaceAll(" ", ""), lastName.replaceAll(" ", ""), phone);
     }
 }
