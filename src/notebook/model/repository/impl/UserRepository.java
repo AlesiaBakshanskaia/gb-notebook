@@ -25,6 +25,12 @@ public class UserRepository implements GBRepository {
     }
 
     @Override
+    public User createNewUser(List<String> dataUser) {
+        User user = new User(dataUser.get(0), dataUser.get(1), dataUser.get(2));
+        return user;
+    }
+
+    @Override
     public List<String> readAll() {
         List<String> lines = new ArrayList<>();
         try {

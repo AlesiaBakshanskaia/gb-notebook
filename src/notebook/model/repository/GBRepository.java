@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GBRepository {
+    User createNewUser(List<String> dataUser);
     List<String> readAll();
     void saveAll(List<String> data);
     List<User> findAll();

@@ -3,7 +3,8 @@ package notebook.view;
 import notebook.controller.UserController;
 import notebook.model.User;
 import notebook.util.Commands;
-
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserView {
@@ -22,8 +23,8 @@ public class UserView {
             if (com == Commands.EXIT) return;
             switch (com) {
                 case CREATE:
-                    User u = createUser();
-                    userController.saveUser(u);
+                    List<String> dataNewUser = getDataUser();
+                    userController.saveUser(userController.createUser(dataNewUser));
                     break;
                 case READ:
                     String id = prompt("Идентификатор пользователя: ");
@@ -44,10 +45,11 @@ public class UserView {
                     break;
                 case UPDATE:
                     String userId = prompt("Идентификатор пользователя: ");
+                    List<String> dataCreateUser = getDataUser();
                     if (userId.isEmpty()) {
                         throw new RuntimeException("Идентификатор не может быть пустым");
                     }
-                    userController.updateUser(userId, createUser());
+                    userController.updateUser(userId, userController.createUser(dataCreateUser));
                     break;
                 case LIST:
                     System.out.println(userController.getAllUsers());
@@ -61,19 +63,15 @@ public class UserView {
         return in.nextLine();
     }
 
-    private User createUser() {
-        String firstName = prompt("Имя: ");
-//        if (firstName.isEmpty()) {
-//            throw new RuntimeException("Поле ИМЯ не может быть пустым");
-//        }
-        String lastName = prompt("Фамилия: ");
-//        if (lastName.isEmpty()) {
-//            throw new RuntimeException("Поле ФАМИЛИЯ не может быть пустым");
-//        }
+    private List<String> getDataUser() {
+        List<String> dataUser = new ArrayList<>();
+        String firstName = prompt("Имя: ").replaceAll(" ", "");
+        dataUser.add(firstName);
+        String lastName = prompt("Фамилия: ").replaceAll(" ", "");
+        dataUser.add(lastName);
         String phone = prompt("Номер телефона: ");
-//        if (phone.isEmpty()) {
-//            throw new RuntimeException("Поле ТЕЛЕФОН не может быть пустым");
-//        }
-        return new User(firstName.replaceAll(" ", ""), lastName.replaceAll(" ", ""), phone);
+        dataUser.add(phone);
+
+        return dataUser;
     }
 }

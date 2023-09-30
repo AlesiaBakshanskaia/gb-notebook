@@ -29,7 +29,7 @@ public class UserController {
     }
 
     public void updateUser(String userId, User update) {
-        update.setId(Long.parseLong(userId));
+//        update.setId(Long.parseLong(userId));
         repository.update(Long.parseLong(userId), update);
     }
     public List<User> getAllUsers(){
@@ -38,5 +38,9 @@ public class UserController {
 
     public void deliteUser(String id) {
         repository.delete(Long.parseLong(id));
+    }
+
+    public User createUser(List<String> dataUser) {
+        return repository.createNewUser(dataUser);
     }
 }
