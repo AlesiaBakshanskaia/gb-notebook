@@ -20,7 +20,7 @@ public class UserView {
         while (true) {
             String command = prompt("Введите команду: ");
             com = Commands.valueOf(command);
-            if (com == Commands.EXIT) return;
+            if (com == Commands.EXIT) System.exit(0);
             switch (com) {
                 case CREATE:
                     List<String> dataNewUser = getDataUser();

@@ -26,8 +26,7 @@ public class UserRepository implements GBRepository {
 
     @Override
     public User createNewUser(List<String> dataUser) {
-        User user = new User(dataUser.get(0), dataUser.get(1), dataUser.get(2));
-        return user;
+        return new User(dataUser.get(0), dataUser.get(1), dataUser.get(2));
     }
 
     @Override
@@ -91,14 +90,14 @@ public class UserRepository implements GBRepository {
             throw new RuntimeException("Поля ИМЯ, ФАМИИЛИЯ или ТЕЛЕФОН не могут быть пустыми");
         }
         List<User> users = findAll();
-        long max = 0L;
-        for (User u : users) {
-            long id = u.getId();
-            if (max < id) {
-                max = id;
-            }
-        }
-        long next = max + 1;
+//        long max = 0L;
+//        for (User u : users) {
+//            long id = u.getId();
+//            if (max < id) {
+//                max = id;
+//            }
+//        }
+        long next = getNewId();
         user.setId(next);
         users.add(user);
         write(users);
@@ -148,24 +147,7 @@ public class UserRepository implements GBRepository {
         write(newUsers);
         return true;
     }
-//    @Override
-//    public boolean delete(Long id) {
-//
-//        List<User> users = findAll();
-//        List<User> newUsers = new ArrayList<>();
-//        User editUser = users.stream()
-//                .filter(u -> u.getId()
-//                        .equals(id))
-//                .findFirst().orElseThrow(() -> new RuntimeException("Такого пользователя нет"));
-//
-//        for (User user : users) {
-//            if (!user.equals(editUser)) {
-//                newUsers.add(user);
-//            }
-//        }
-//        write(newUsers);
-//        return true;
-//    }
+
 
     private void write(List<User> users) {
         List<String> lines = new ArrayList<>();
@@ -173,6 +155,41 @@ public class UserRepository implements GBRepository {
             lines.add(mapper.toInput(u));
         }
         saveAll(lines);
+    }
+
+
+    private void saveId(long id) {
+        try (FileWriter writer = new FileWriter("dbId.txt", false)) {
+            writer.write(Long.toString(id));
+            writer.flush();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    private long readId() {
+        long lastId = 0;
+        try {
+            File file = new File("dbId.txt");
+            //создаем объект FileReader для объекта File
+            FileReader fr = new FileReader(file);
+            //создаем BufferedReader с существующего FileReader для построчного считывания
+            BufferedReader reader = new BufferedReader(fr);
+            // считаем сначала первую строку
+            String lastIdStr = reader.readLine();
+            if (lastIdStr != null) {
+                lastId = Long.parseLong(lastIdStr);
+            }
+            fr.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return lastId;
+    }
+    private long getNewId() {
+        long id = readId() + 1;
+        saveId(id);
+        return id;
     }
 
 }
