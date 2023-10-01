@@ -105,6 +105,7 @@ public class UserRepository implements GBRepository {
         return user;
     }
 
+
     @Override
     public Optional<User> findById(Long id) {
         return Optional.empty();
@@ -141,11 +142,30 @@ public class UserRepository implements GBRepository {
                 newUsers.add(user);
             }
         }
+        if (users.size() == newUsers.size()) {
+            return false;
+        }
         write(newUsers);
         return true;
-
-
     }
+//    @Override
+//    public boolean delete(Long id) {
+//
+//        List<User> users = findAll();
+//        List<User> newUsers = new ArrayList<>();
+//        User editUser = users.stream()
+//                .filter(u -> u.getId()
+//                        .equals(id))
+//                .findFirst().orElseThrow(() -> new RuntimeException("Такого пользователя нет"));
+//
+//        for (User user : users) {
+//            if (!user.equals(editUser)) {
+//                newUsers.add(user);
+//            }
+//        }
+//        write(newUsers);
+//        return true;
+//    }
 
     private void write(List<User> users) {
         List<String> lines = new ArrayList<>();

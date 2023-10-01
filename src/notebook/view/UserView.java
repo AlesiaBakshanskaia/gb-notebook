@@ -41,7 +41,11 @@ public class UserView {
                     break;
                 case DELETE:
                     String idd = prompt("Идентификатор пользователя: ");
-                    userController.deliteUser(idd);
+                    if (userController.deliteUser(idd)) {
+                        System.out.println("Пользователь удален");
+                    } else {
+                        System.out.println("Такого пользователя нет");
+                    }
                     break;
                 case UPDATE:
                     String userId = prompt("Идентификатор пользователя: ");

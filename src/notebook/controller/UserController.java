@@ -36,8 +36,8 @@ public class UserController {
         return repository.findAll();
     }
 
-    public void deliteUser(String id) {
-        repository.delete(Long.parseLong(id));
+    public boolean deliteUser(String id) {
+        return repository.delete(Long.parseLong(id));
     }
 
     public User createUser(List<String> dataUser) {
