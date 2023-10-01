@@ -16,7 +16,7 @@ public class Main {
         createDB();
         createDBId();
 
-        GBRepository repository = new UserRepository(DB_PATH);
+        GBRepository repository = new UserRepository(DB_PATH, DBID_PATH);
         UserController controller = new UserController(repository);
         UserView view = new UserView(controller);
         view.run();

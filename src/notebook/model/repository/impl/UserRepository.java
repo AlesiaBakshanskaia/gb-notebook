@@ -13,10 +13,12 @@ import java.util.Optional;
 public class UserRepository implements GBRepository {
     private final UserMapper mapper;
     private final String fileName;
+    private final String fileNameId;
 
-    public UserRepository(String fileName) {
+    public UserRepository(String fileName, String fileNameId) {
         this.mapper = new UserMapper();
         this.fileName = fileName;
+        this.fileNameId = fileNameId;
         try (FileWriter writer = new FileWriter(fileName, true)) {
             writer.flush();
         } catch (IOException e) {
@@ -159,7 +161,7 @@ public class UserRepository implements GBRepository {
 
 
     private void saveId(long id) {
-        try (FileWriter writer = new FileWriter("dbId.txt", false)) {
+        try (FileWriter writer = new FileWriter(fileNameId, false)) {
             writer.write(Long.toString(id));
             writer.flush();
         } catch (IOException e) {
@@ -169,7 +171,7 @@ public class UserRepository implements GBRepository {
     private long readId() {
         long lastId = 0;
         try {
-            File file = new File("dbId.txt");
+            File file = new File(fileNameId);
             //создаем объект FileReader для объекта File
             FileReader fr = new FileReader(file);
             //создаем BufferedReader с существующего FileReader для построчного считывания
