@@ -11,7 +11,7 @@ public class DBConnectorId {
                 System.out.println("DBID created");
             }
             else {
-                System.out.println("DB already exists");
+                System.out.println("DBID already exists");
             }
         }
         catch (Exception e) {

@@ -8,6 +8,7 @@ import notebook.model.repository.GBRepository;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class UserRepository implements GBRepository {
@@ -87,7 +88,7 @@ public class UserRepository implements GBRepository {
     }
 
     @Override
-    public User create(User user) {
+    public void create(User user) {
         if (user.getFirstName().isEmpty() || user.getLastName().isEmpty() || user.getPhone().isEmpty()) {
             throw new RuntimeException("Поля ИМЯ, ФАМИИЛИЯ или ТЕЛЕФОН не могут быть пустыми");
         }
@@ -103,13 +104,18 @@ public class UserRepository implements GBRepository {
         user.setId(next);
         users.add(user);
         write(users);
-        return user;
     }
 
 
     @Override
-    public Optional<User> findById(Long id) {
-        return Optional.empty();
+    public User findById(Long id) {
+        List<User> users = findAll();
+        for (User user : users) {
+            if (Objects.equals(user.getId(), id)) {
+                return user;
+            }
+        }
+        throw new RuntimeException("Такого пользователя не существует");
     }
 
     @Override
@@ -185,7 +191,6 @@ public class UserRepository implements GBRepository {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return lastId;
     }
     private long getNewId() {

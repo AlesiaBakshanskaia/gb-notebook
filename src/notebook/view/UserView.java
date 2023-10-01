@@ -41,6 +41,9 @@ public class UserView {
                     break;
                 case DELETE:
                     String idd = prompt("Идентификатор пользователя: ");
+                    if (idd.isEmpty()) {
+                        throw new RuntimeException("Идентификатор не может быть пустым");
+                    }
                     if (userController.deliteUser(idd)) {
                         System.out.println("Пользователь удален");
                     } else {
@@ -49,10 +52,10 @@ public class UserView {
                     break;
                 case UPDATE:
                     String userId = prompt("Идентификатор пользователя: ");
-                    List<String> dataCreateUser = getDataUser();
                     if (userId.isEmpty()) {
                         throw new RuntimeException("Идентификатор не может быть пустым");
                     }
+                    List<String> dataCreateUser = getDataUser();
                     userController.updateUser(userId, userController.createUser(dataCreateUser));
                     break;
                 case LIST:
